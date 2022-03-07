@@ -21,12 +21,12 @@ func TestMatchPatternDirect(t *testing.T) {
 	match, err := matchPattern(outdir, p, nil, false, zap.NewNop())
 	require.NoError(t, err)
 	assert.Len(t, match, 1)
-	assert.Equal(t, match[0], "a/b/c-test.txt")
+	assert.Equal(t, filepath.Join("a/b/c-test.txt"), match[0])
 
 	absMatch, err := matchPattern(outdir, p, nil, true, zap.NewNop())
 	require.NoError(t, err)
 	assert.Len(t, absMatch, 1)
-	assert.Equal(t, absMatch[0], filepath.Join(outdir, "a/b/c-test.txt"))
+	assert.Equal(t, filepath.Join(outdir, "a/b/c-test.txt"), absMatch[0])
 }
 
 func TestStarGlobAndGlobstarMatching(t *testing.T) {
