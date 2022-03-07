@@ -2,7 +2,6 @@ package glob
 
 import (
 	"path/filepath"
-	"regexp"
 	"testing"
 
 	"github.com/lukasholzer/go-glob/fixtures"
@@ -67,11 +66,11 @@ func TestShouldParseVariousLines(t *testing.T) {
 	}
 }
 
-func compareParsedGlob(t *testing.T, want map[string]string, got map[string]*regexp.Regexp) {
+func compareParsedGlob(t *testing.T, want map[string]string, got map[string]*ParsedPattern) {
 	assert.Len(t, got, len(want))
 	for glob, reg := range got {
 		w, ok := want[glob]
 		require.True(t, ok, "did not receive a pattern %s", glob)
-		assert.Equal(t, w, reg.String())
+		assert.Equal(t, w, reg.RegExp.String())
 	}
 }
