@@ -9,6 +9,11 @@ import (
 
 func TestStarGlobAndGlobstarMatching(t *testing.T) {
 	tests := map[string]interface{}{
+		"**/*": map[string]bool{
+			"a.txt":     true,
+			"a/x/y.txt": true,
+			"a/x/y/z":   true,
+		},
 		"a/**/*.txt": map[string]bool{
 			"a.txt":     false,
 			"a/x/y.txt": true,
