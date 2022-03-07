@@ -32,8 +32,14 @@ jobs:
         run: |
           go version
           go get -u golang.org/x/lint/golint
-      - run: go test -v -race -covermode=atomic -coverprofile=coverage.out ./...
+      - name: unit testing
+        if: matrix.os == 'ubuntu-latest'
+        run: go test -v -race -covermode=atomic -coverprofile=coverage.out ./...
+      - name: unit testing
+        if: matrix.os != 'ubuntu-latest'
+        run: go test -v -race ./...
       - uses: codecov/codecov-action@v2
+        if: matrix.os == 'ubuntu-latest'
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./coverage.out
