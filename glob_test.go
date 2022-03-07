@@ -24,7 +24,7 @@ func TestGlobApiShouldUseSpreadOptions(t *testing.T) {
 	})
 	files, err := Glob(Pattern("**/*"), CWD(outdir), IgnorePattern("a"), IgnoreFile(".ignore"))
 	require.NoError(t, err)
-	assert.ElementsMatch(t, []string{"f/g"}, files)
+	assert.ElementsMatch(t, []string{filepath.Join("f/g")}, files)
 }
 
 func TestGlobPattern(t *testing.T) {
