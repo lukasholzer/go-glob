@@ -1,6 +1,7 @@
 package glob
 
 import (
+	"fmt"
 	"regexp"
 	"strings"
 )
@@ -25,13 +26,13 @@ func Parse(input string) (*regexp.Regexp, error) {
 	for i := 0; i < len(input); i++ {
 		cur := string(input[i])
 		// store the previous character if we have some
-		var prevChar string
+		// var prevChar string
 		// store the next character if we have some
 		var nextChar string
 
-		if i > 0 {
-			prevChar = string(input[i-1])
-		}
+		// if i > 0 {
+		// 	prevChar = string(input[i-1])
+		// }
 
 		if i < len(input)-1 {
 			nextChar = string(input[i+1])
@@ -57,6 +58,7 @@ func Parse(input string) (*regexp.Regexp, error) {
 		case "!":
 			fallthrough
 		case "|":
+			// escape the following characters as they have a special meaning in regexp
 			str += `\` + cur
 		case "?":
 			str += "."
@@ -65,27 +67,29 @@ func Parse(input string) (*regexp.Regexp, error) {
 			// count consecutive stars to determine if it is a globstar `**` or single star
 			starCount := 1
 
-			for string(input[i+1]) == "*" {
+			if nextChar == "*" {
 				starCount++
 				i++
 			}
 
-			isStartOfSegment := prevChar == `/` || len(prevChar) == 0
-			isEndOfSegment := nextChar == `/` || len(nextChar) == 0
+			// for string(input[i+1]) == "*" {
+			// 	starCount++
+			// 	i++
+			// }
 
-			isGlobstar := starCount > 1 && isStartOfSegment && isEndOfSegment
+			// isStartOfSegment := prevChar == `/` || len(prevChar) == 0
+			// isEndOfSegment := nextChar == `/` || len(nextChar) == 0
 
-			if string(input[i+1]) == "*" {
-				isGlobstar = true
-			}
+			isGlobstar := starCount > 1 //  && isStartOfSegment && isEndOfSegment
 
+			fmt.Println(isGlobstar, starCount > 1)
 			if isGlobstar {
 				// it's a globstar, so match zero or more path segments
-				str += `((?:[^/]*(?:\/|$))*)`
+				str += GLOBSTER
 				i++ // move over the "/"
 			} else {
 				// it's not a globstar, so only match one path segment
-				str += `([^/]*)`
+				str += STAR
 			}
 
 		default:
