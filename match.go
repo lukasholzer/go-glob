@@ -1,7 +1,6 @@
 package glob
 
 import (
-	"fmt"
 	"io/fs"
 	"path/filepath"
 )
@@ -20,7 +19,7 @@ func matchFiles(dir string, globs GlobPatterns, ignore GlobPatterns, absolutePat
 
 		for _, igr := range ignore {
 			if Match(igr, rel) {
-				fmt.Printf("IGNORE PATH: %s\n", rel)
+				// fmt.Printf("IGNORE PATH: %s\n", rel)
 
 				if d.IsDir() {
 					return fs.SkipDir
@@ -32,7 +31,7 @@ func matchFiles(dir string, globs GlobPatterns, ignore GlobPatterns, absolutePat
 		if !d.IsDir() {
 			for _, fg := range globs {
 				if Match(fg, rel) {
-					fmt.Printf("MATCHING PATH: %s\n", rel)
+					// fmt.Printf("MATCHING PATH: %s\n", rel)
 					if absolutePaths {
 						files = append(files, path)
 					} else {
