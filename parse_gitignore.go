@@ -2,13 +2,12 @@ package glob
 
 import (
 	"os"
-	"regexp"
 	"strings"
 )
 
 // ParseGitignoreContent parses a file according to: http://git-scm.com/docs/gitignore
-func ParseGitignoreContent(content string) (map[string]*regexp.Regexp, error) {
-	pattern := make(map[string]*regexp.Regexp)
+func ParseGitignoreContent(content string) (GlobPatterns, error) {
+	pattern := make(GlobPatterns)
 
 	for _, line := range strings.Split(content, "\n") {
 		trimmed := strings.TrimSpace(line)
@@ -26,9 +25,9 @@ func ParseGitignoreContent(content string) (map[string]*regexp.Regexp, error) {
 	return pattern, nil
 }
 
-func ParseGitignore(file string) (map[string]*regexp.Regexp, error) {
+func ParseGitignore(file string) (GlobPatterns, error) {
 	if _, err := os.Stat(file); err != nil {
-		return make(map[string]*regexp.Regexp), nil
+		return make(GlobPatterns), nil
 	}
 
 	bs, err := os.ReadFile(file)

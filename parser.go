@@ -1,9 +1,10 @@
 package glob
 
 import (
-	"fmt"
 	"regexp"
 	"strings"
+
+	"github.com/lukasholzer/glob/internal"
 )
 
 func cleanPattern(input string) string {
@@ -16,7 +17,7 @@ func cleanPattern(input string) string {
 	return input
 }
 
-func Parse(input string) (*regexp.Regexp, error) {
+func Parse(input string) (GlobPattern, error) {
 	// remove duplicate or redundant parts in the pattern
 	// and transform to posix separators
 	input = cleanPattern(input)
@@ -82,14 +83,13 @@ func Parse(input string) (*regexp.Regexp, error) {
 
 			isGlobstar := starCount > 1 //  && isStartOfSegment && isEndOfSegment
 
-			fmt.Println(isGlobstar, starCount > 1)
 			if isGlobstar {
 				// it's a globstar, so match zero or more path segments
-				str += GLOBSTER
+				str += internal.GLOBSTER
 				i++ // move over the "/"
 			} else {
 				// it's not a globstar, so only match one path segment
-				str += STAR
+				str += internal.STAR
 			}
 
 		default:
