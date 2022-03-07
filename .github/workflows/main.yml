@@ -32,4 +32,9 @@ jobs:
         run: |
           go version
           go get -u golang.org/x/lint/golint
-      - run: go test -v -race ./...
+      - run: go test -v -race -covermode=atomic -coverprofile=coverage.out ./...
+      - uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage.out
+          name: codecov-glob

@@ -1,4 +1,4 @@
-package glob
+package internal
 
 const (
 	STAR     = `([^/]*)`              // should match one path segment https://regex101.com/r/974GPG/1
