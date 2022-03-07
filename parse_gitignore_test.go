@@ -1,12 +1,31 @@
 package glob
 
 import (
+	"path/filepath"
 	"regexp"
 	"testing"
 
+	"github.com/lukasholzer/go-glob/fixtures"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
+
+func TestReadGitignoreFile(t *testing.T) {
+
+	folder := fixtures.CreateNew(t, map[string]string{
+		".gitignore": `# some comment
+node_modules
+
+.github/styles`,
+	})
+	patterns, err := ParseGitignore(filepath.Join(folder, ".gitignore"))
+	require.NoError(t, err)
+
+	compareParsedGlob(t, map[string]string{
+		"node_modules":   `^node_modules$`,
+		".github/styles": `^\.github\/styles$`,
+	}, patterns)
+}
 
 func TestShouldParseGitignroeSyntax(t *testing.T) {
 	patterns, err := ParseGitignoreContent(`

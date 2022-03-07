@@ -10,6 +10,7 @@ import (
 
 func CreateNew(t *testing.T, fileMap map[string]string) string {
 	tmpDir := t.TempDir()
+
 	require.NoError(t, os.MkdirAll(tmpDir, 0777))
 
 	for f, data := range fileMap {
