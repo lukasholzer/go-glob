@@ -9,6 +9,24 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+func TestGlobApiShouldThrowWithoutPattern(t *testing.T) {
+	files, err := Glob(CWD("test"))
+	assert.Error(t, err)
+	assert.Len(t, files, 0)
+}
+
+func TestGlobApiShouldUseSpreadOptions(t *testing.T) {
+	outdir := fixtures.CreateNew(t, map[string]string{
+		"a/b/c":   "",
+		"d/e":     "",
+		"f/g":     "",
+		".ignore": "d\n.ignore",
+	})
+	files, err := Glob(Pattern("**/*"), CWD(outdir), IgnorePattern("a"), IgnoreFile(".ignore"))
+	require.NoError(t, err)
+	assert.ElementsMatch(t, []string{"f/g"}, files)
+}
+
 func TestGlobPattern(t *testing.T) {
 	fileMap := map[string]string{
 		"a/b/c/d.txt":           "",

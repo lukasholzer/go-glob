@@ -3,13 +3,12 @@ package glob
 import (
 	"os"
 	"path/filepath"
-	"regexp"
 
 	"github.com/pkg/errors"
+	"go.uber.org/zap"
 )
 
-type GlobPattern = *regexp.Regexp
-type GlobPatterns = map[string]GlobPattern
+type GlobPatterns = map[string]*ParsedPattern
 
 type Options struct {
 	IgnorePatterns []string
@@ -17,6 +16,7 @@ type Options struct {
 	CWD            string
 	Patterns       []string
 	AbsolutePaths  bool
+	Debug          bool
 }
 
 func Pattern(pattern string) *Options {
@@ -52,6 +52,7 @@ func Glob(options ...*Options) ([]string, error) {
 	ignores := make(GlobPatterns)
 	patterns := make(GlobPatterns)
 	absolutePaths := false
+	logger := zap.NewNop()
 	var cwd string
 
 	for _, opt := range options {
@@ -61,6 +62,14 @@ func Glob(options ...*Options) ([]string, error) {
 
 		if opt.AbsolutePaths {
 			absolutePaths = true
+		}
+
+		if opt.Debug {
+			l, err := zap.NewDevelopment()
+			if err != nil {
+				return nil, err
+			}
+			logger = l
 		}
 
 		for _, p := range opt.IgnorePatterns {
@@ -105,5 +114,5 @@ func Glob(options ...*Options) ([]string, error) {
 		cwd = wd
 	}
 
-	return matchFiles(cwd, patterns, ignores, absolutePaths)
+	return matchFiles(cwd, patterns, ignores, absolutePaths, logger)
 }
