@@ -11,7 +11,7 @@ import (
 type GlobPattern = *regexp.Regexp
 type GlobPatterns = map[string]GlobPattern
 
-type globOptions struct {
+type Options struct {
 	IgnorePatterns []string
 	IgnoreFiles    []string
 	CWD            string
@@ -19,35 +19,35 @@ type globOptions struct {
 	AbsolutePaths  bool
 }
 
-func Pattern(pattern string) *globOptions {
-	return &globOptions{
+func Pattern(pattern string) *Options {
+	return &Options{
 		Patterns: []string{pattern},
 	}
 }
 
 // CWD sets a cwd where the glob pattern is executed in by default the process current working directory is used
-func CWD(cwd string) *globOptions {
-	return &globOptions{
+func CWD(cwd string) *Options {
+	return &Options{
 		CWD: cwd,
 	}
 }
 
 // IgnorePatterns sets a list of patterns that is used for ignoring specific files or directories
-func IgnorePatterns(pattern []string) *globOptions {
-	return &globOptions{
-		IgnorePatterns: pattern,
+func IgnorePattern(pattern string) *Options {
+	return &Options{
+		IgnorePatterns: []string{pattern},
 	}
 }
 
 // IgnoreFiles provides a list on file paths relative to the current working directory that follow the .gitignore syntax and are used to provide ignore patterns
-func IgnoreFiles(files []string) *globOptions {
-	return &globOptions{
-		IgnoreFiles: files,
+func IgnoreFile(files string) *Options {
+	return &Options{
+		IgnoreFiles: []string{files},
 	}
 }
 
 // Glob is the main glob function that is used to get a list of files in a specific directory matching the patterns and respecting the ignores
-func Glob(options ...*globOptions) ([]string, error) {
+func Glob(options ...*Options) ([]string, error) {
 	// use a map to avoid duplicates
 	ignores := make(GlobPatterns)
 	patterns := make(GlobPatterns)
