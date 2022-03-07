@@ -4,7 +4,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/lukasholzer/glob/fixtures"
+	"github.com/lukasholzer/go-glob/fixtures"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -20,7 +20,7 @@ func TestGlobPattern(t *testing.T) {
 
 	dir := fixtures.CreateNew(t, fileMap)
 
-	files, err := Glob(&globOptions{
+	files, err := Glob(&Options{
 		Patterns:       []string{"**/*"},
 		CWD:            dir,
 		IgnorePatterns: []string{"a", "c"},
@@ -45,7 +45,7 @@ func TestGlobPatternAbsolute(t *testing.T) {
 
 	dir := fixtures.CreateNew(t, fileMap)
 
-	files, err := Glob(&globOptions{
+	files, err := Glob(&Options{
 		Patterns:       []string{"**/*"},
 		CWD:            dir,
 		IgnorePatterns: []string{"a", "c"},

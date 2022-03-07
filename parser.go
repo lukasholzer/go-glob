@@ -4,7 +4,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/lukasholzer/glob/internal"
+	"github.com/lukasholzer/go-glob/internal"
 )
 
 func cleanPattern(input string) string {
